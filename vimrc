@@ -224,17 +224,5 @@ au FileType java   set makeprg=javac\ \-g\ %
 " KEY BINDS
 au FileType c,cpp noremap ; $i<right>;<esc>
 
-" HASKELL
-" autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" POTENTIAL USEFUL FUNCTIONS/SETTINGS/BINDS TO REMEMBER "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" SOURCE SETTINGS FILES FOR INDIVIDUAL PLUGINS/TASKS/WHATEVER
-" for f in split(glob('~/.vim/settings/*.vim'), '\n')
-"     exe 'source' f
-" endfor
-
-vmap <Enter> :Tab
+vmap <Enter> :Tab<Space>/
 
