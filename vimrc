@@ -2,9 +2,18 @@ set nocompatible
 
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
-nnoremap <Leader>pu :PlugUpdate4<CR>
-nnoremap <Leader>pc :PlugClean<CR>
-nnoremap <Leader>pi :PlugInstall4<CR>
+nnoremap <Leader>Pu :PlugUpdate4<CR>
+nnoremap <Leader>Pc :PlugClean<CR>
+nnoremap <Leader>Pi :PlugInstall4<CR>
+
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
+
+Plug 'sirtaj/vim-openscad'
+
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
+Plug 'LaTeX-Box-Team/LaTeX-Box'
 
 Plug 'kien/ctrlp.vim'
 " Set delay to prevent extra search
@@ -16,6 +25,9 @@ let g:ctrlp_clear_cache_on_exit = 0
 
 " Set no file limit, we are building a big project
 let g:ctrlp_max_files = 0
+
+Plug 'hdima/python-syntax'
+let python_highlight_all = 1
 
 " If ag is available use it as filename list generator instead of 'find'
 if executable("ag")
@@ -43,9 +55,8 @@ Plug 'freitass/todo.txt-vim'
 Plug 'bling/vim-airline'
 let g:airline_theme='tomorrow'
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_left_sep=''
-let g:airline_right_sep=''
+"let g:airline_left_sep=''
+"let g:airline_right_sep=''
 
 
 Plug 'justinmk/vim-syntax-extra'
@@ -87,15 +98,11 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
 let g:syntastic_python_checkers = ['pyflakes']
+let g:syntastic_latex_checkers = []
 
 Plug 'rking/ag.vim'
 
 Plug 'majutsushi/tagbar'
-
-Plug 'Shougo/neocomplete.vim'
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 Plug 'terryma/vim-expand-region'
 
@@ -146,7 +153,8 @@ set viminfo='100,f1
 set t_Co=256
 set background=dark
 color hybrid
-set guifont=Inconsolata\ for\ Powerline:h14
+set guifont=PragmataPro\ for\ Powerline:h14
+set antialias
 set guioptions=m
 
 " STATUSLINE
