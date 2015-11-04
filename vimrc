@@ -2,18 +2,18 @@ set nocompatible
 
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
-nnoremap <Leader>Pu :PlugUpdate4<CR>
-nnoremap <Leader>Pc :PlugClean<CR>
-nnoremap <Leader>Pi :PlugInstall4<CR>
-
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 
 Plug 'sirtaj/vim-openscad'
+Plug 'sophacles/vim-processing'
 
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
+Plug 'neovimhaskell/haskell-vim'
+
 Plug 'LaTeX-Box-Team/LaTeX-Box'
+let g:LatexBox_latexmk_async = 1
+let g:LatexBox_show_warnings = 0
 
 Plug 'kien/ctrlp.vim'
 " Set delay to prevent extra search
@@ -24,7 +24,7 @@ let g:ctrlp_lazy_update = 350
 let g:ctrlp_clear_cache_on_exit = 0
 
 " Set no file limit, we are building a big project
-let g:ctrlp_max_files = 0
+let g:ctrlp_max_files = 1000
 
 Plug 'hdima/python-syntax'
 let python_highlight_all = 1
@@ -57,7 +57,6 @@ let g:airline_theme='tomorrow'
 let g:airline_powerline_fonts = 1
 "let g:airline_left_sep=''
 "let g:airline_right_sep=''
-
 
 Plug 'justinmk/vim-syntax-extra'
 
@@ -99,6 +98,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
 let g:syntastic_python_checkers = ['pyflakes']
 let g:syntastic_latex_checkers = []
+let g:syntastic_tex_checkers = []
 
 Plug 'rking/ag.vim'
 
@@ -121,7 +121,6 @@ set ruler
 set cursorline
 set showmode
 set number
-set rnu
 set backspace=indent,eol,start
 set history=1000
 set autoread
@@ -151,9 +150,9 @@ set viminfo='100,f1
 
 " APPEARANCE
 set t_Co=256
-set background=dark
+set background=light
 color hybrid
-set guifont=PragmataPro\ for\ Powerline:h14
+set guifont=Inconsolata-g\ for\ Powerline:h12
 set antialias
 set guioptions=m
 
