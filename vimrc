@@ -96,6 +96,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = "-std=c++11 -stdlib=libc++ -Wall -Werror -pedantic -Wc++11-extensions"
 let g:syntastic_python_checkers = ['pyflakes']
 let g:syntastic_latex_checkers = []
 let g:syntastic_tex_checkers = []
@@ -131,6 +133,8 @@ set title titlestring=%f
 set noerrorbells
 set lazyredraw
 set encoding=utf8
+set ssop-=options    " do not store global and local values in a session
+set ssop-=folds      " do not store folds
 
 " INDENT/TAB/SPACES
 set autoindent
@@ -154,7 +158,7 @@ set background=light
 color hybrid
 set guifont=Inconsolata-g\ for\ Powerline:h12
 set antialias
-set guioptions=m
+set guioptions=me
 
 " STATUSLINE
 set laststatus=2
