@@ -4,26 +4,40 @@ let mapleader="\<Space>"
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
 
-" SHOUGO IS A GENIUS
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Shougo/unite-outline'
 
-nnoremap <Leader>uf :<C-u>Unite -no-split -start-insert file_rec/async<CR>
+nnoremap <Leader>uf :<C-u>Unite -no-split -start-insert -auto-preview file_rec/async<CR>
 nnoremap <Leader>uo :<C-u>Unite -no-split outline<CR>
 
 let g:unite_source_grep_max_candidates = 1000
 let g:unite_source_grep_search_word_highlight = 'IncSearch'
 
 if executable('ag')
-    " Use ag (the silver searcher)
-    " https://github.com/ggreer/the_silver_searcher
     let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-                \ '-i --vimgrep --hidden --ignore ' .
-                \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+    let g:unite_source_grep_default_opts = '--vimgrep'
     let g:unite_source_grep_recursive_opt = ''
 endif
+
+" filetypes to ignore with unite
+set wildignore=*.o,*.pyc
+call unite#custom#source('file_rec/async', 'ignore_globs', split(&wildignore, ','))
+
+" directories to ignore with unite
+call unite#custom_source('file,file_rec,file_rec/async,grep',
+      \ 'ignore_pattern', join([
+      \ '\.git/',
+      \ '\.svn/',
+      \ '\.bzr/',
+      \ 'build/',
+      \ ], '\|'))
+
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()"{{{
+    imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+    imap <buffer> <S-TAB> <Plug>(unite_select_previous_line)
+endfunction"}}}
 
 Plug 'Shougo/neocomplete.vim'
 let g:neocomplete#enable_at_startup = 1
@@ -72,6 +86,29 @@ let g:airline_theme='tomorrow'
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
+
+function! AirlineInit()
+    let g:airline_section_a = airline#section#create(['mode'])
+    let g:airline_section_b = airline#section#create(['%t'])
+    let g:airline_section_c = airline#section#create([])
+    let g:airline_section_x = airline#section#create([])
+    let g:airline_section_y = airline#section#create([])
+    let g:airline_section_z = airline#section#create(['%l',':','%c'])
+endfunction
+
+autocmd VimEnter * call AirlineInit()
+
+let g:airline_mode_map = {
+      \ '__' : '-',
+      \ 'n' : 'N',
+      \ 'i' : 'I',
+      \ 'R' : 'R',
+      \ 'c' : 'C',
+      \ 'v' : 'V',
+      \ 'V' : 'V',
+      \ 's' : 'S',
+      \ 'S' : 'S',
+      \ }
 
 Plug 'justinmk/vim-syntax-extra'
 
