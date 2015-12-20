@@ -3,24 +3,16 @@ set nocompatible
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
 
-Plug 'unblevable/quick-scope'
 Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'Shougo/vimproc.vim', { 'do' : 'make' }
 Plug 'Shougo/unite-outline'
-Plug 'Shougo/neocomplete.vim'
 
-Plug 'osyo-manga/vim-marching'
-
-" cooperate with neocomplete.vim
-let g:marching_enable_neocomplete = 1
-let g:marching_include_paths = [ "/usr/include/c++/4.2.1", "./include" ]
-
-Plug 'sirtaj/vim-openscad'
-Plug 'sophacles/vim-processing'
+Plug 'sirtaj/vim-openscad', { 'for': 'scad' }
+Plug 'sophacles/vim-processing', { 'for': 'pde' }
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
-Plug 'neovimhaskell/haskell-vim'
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 let g:LatexBox_latexmk_async = 1
@@ -33,6 +25,7 @@ vnoremap <Enter> :Tab<Space>/
 
 Plug 'flazz/vim-colorschemes'
 Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'atelierbram/vim-colors_atelier-schemes'
 
 Plug 'freitass/todo.txt-vim'
 
@@ -46,9 +39,9 @@ autocmd BufWritePre * StripWhitespace
 Plug 'JuliaLang/julia-vim'
 let g:latex_to_unicode_auto = 1
 
-Plug 'guns/vim-clojure-static'
-Plug 'tpope/vim-leiningen'
-Plug 'tpope/vim-fireplace'
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
@@ -57,7 +50,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 let g:easytags_async=1
 
-Plug 'xolox/vim-lua-ftplugin'
+Plug 'xolox/vim-lua-ftplugin', { 'for': 'lua' }
 let g:lua_check_syntax = 0
 
 Plug 'scrooloose/syntastic'
@@ -122,14 +115,14 @@ set viminfo='100,f1
 " APPEARANCE
 set t_Co=256
 set background=dark
-color hybrid_material
+color base16-ateliersulphurpool
 set antialias
 set guioptions=me
 
 if has('gui_running')
     let hostname = substitute(system('hostname'), '\n', '', '')
     if hostname == "Zacharys-MacBook-Pro.local"
-        set guifont=Sauce\ Code\ Powerline\ Semibold:h12
+        set guifont=Meslo\ LG\ M\ DZ\ Regular\ for\ Powerline:h13
     endif
 endif
 
@@ -163,6 +156,15 @@ endif
 " }}}
 
 " PLUGIN-SPECIFIC {{{
+
+" HASKELL-VIM {{{
+let g:haskell_enable_quantification = 1
+let g:haskell_enable_recursivedo = 1
+let g:haskell_enable_arrowsyntax = 1
+let g:haskell_enable_pattern_synonyms = 1
+let g:haskell_enable_typeroles = 1
+let g:haskell_enable_static_pointers = 1
+" }}}
 
 " UNITE {{{
 let g:unite_source_grep_max_candidates = 5000
@@ -228,18 +230,6 @@ endfunction
 autocmd VimEnter * call AirlineInit()
 " }}}
 
-" NEOCOMPLETE {{{
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-
-let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-" }}}
-
 " SYNTASTIC {{{
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -247,7 +237,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_compiler_options = "-std=c++11 -stdlib=libc++ -Wall -Werror -pedantic -Wc++11-extensions"
+let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions"
 
 let g:syntastic_c_compiler = 'clang'
 let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
@@ -312,13 +302,9 @@ nnoremap <Leader>hs :call SplitHeader()<CR>
 " PLUGINS-SPECIFIC {{{
 
 " UNITE {{{
-nnoremap <Leader>uf :<C-u>Unite -no-split -start-insert file_rec/async<CR>
-nnoremap <Leader>uo :<C-u>Unite -no-split outline<CR>
-" }}}
-
-" NEOCOMPLETE {{{
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
+nnoremap <Leader>uf :<C-u>Unite -no-split -start-insert file_rec<CR>
+nnoremap <Leader>uo :<C-u>Unite -no-split -start-insert outline<CR>
+nnoremap <Leader>ug :<C-u>Unite -no-split grep:.<CR>
 " }}}
 
 " }}}
