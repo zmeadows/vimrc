@@ -280,7 +280,8 @@ let g:unite_source_grep_search_word_highlight = 'IncSearch'
 
 if executable('ag')
     let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts = '--vimgrep'
+    let g:unite_source_grep_default_opts = '--vimgrep' .
+                \' --ignore "RootCoreBin"'
     let g:unite_source_grep_recursive_opt = ''
 endif
 
