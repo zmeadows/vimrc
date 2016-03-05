@@ -246,14 +246,13 @@ endfunction
 nnoremap <Leader>hs :call SplitHeader()<CR>
 
 " COMMAND ALIASES
-" mostly for correcting common, annoying typos
-
 fun! SetupCommandAlias(from, to)
   exec 'cnoreabbrev <expr> '.a:from
         \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
         \ .'? ("'.a:to.'") : ("'.a:from.'"))'
 endfun
 
+" correct common/annoying typos
 call SetupCommandAlias('W', 'w')
 call SetupCommandAlias('Wa', 'wa')
 call SetupCommandAlias('WA', 'wa')
@@ -265,10 +264,15 @@ call SetupCommandAlias('WQA', 'wqa')
 " NOTES
 
 fun! StartPandocPreview()
-    call vimproc#system_bg('open -a Skim /Users/zac/Documents/tmp.pdf')
-    call vimproc#system_bg('/usr/local/bin/pandoc ' . expand('%:p') . ' -o /Users/zac/Documents/tmp.pdf -V geometry:margin=1in')
-    autocmd BufWritePost *.md :call vimproc#system_bg('/usr/local/bin/pandoc ' . expand('%:p') . ' -o /Users/zac/Documents/tmp.pdf -V geometry:margin=1in')
-    autocmd InsertLeave *.md update | :call vimproc#system_bg('/usr/local/bin/pandoc ' . expand('%:p') . ' -o /Users/zac/Documents/tmp.pdf -V geometry:margin=1in')
+    let pandoc_compile_command = '/usr/local/bin/pandoc ' .
+        \ expand('%:p') .
+        \ ' -o /private/tmp/note_tmp.pdf -V geometry:margin=1in'
+
+    call vimproc#system_bg('open -a Skim /private/tmp/note_tmp.pdf')
+    call vimproc#system_bg(pandoc_compile_command)
+
+    autocmd BufWritePost *.md :call vimproc#system_bg(pandoc_compile_command)
+    autocmd InsertLeave *.md update | :call vimproc#system_bg(pandoc_compile_command)
 endfun
 
 autocmd Filetype markdown nnoremap <Leader>pp :call StartPandocPreview()<CR>
@@ -297,6 +301,7 @@ call unite#custom_source('file, file_rec, file_rec/async, grep',
       \ '\.svn/',
       \ '\.bzr/',
       \ 'build/',
+      \ 'images/',
       \ ], '\|'))
 
 " unite window keybinds
@@ -306,7 +311,23 @@ function! s:unite_my_settings()
     imap <buffer> <S-TAB> <Plug>(unite_select_previous_line)
 endfunction
 
-nnoremap <Leader>uf :<C-u>Unite -no-split -start-insert file_rec<CR>
-nnoremap <Leader>un :<C-u>Unite file file/new -no-split -buffer-name=notes -start-insert -auto-preview<CR>
-nnoremap <Leader>uo :<C-u>Unite -no-split -start-insert outline<CR>
-nnoremap <Leader>ug :<C-u>Unite -no-split grep:.<CR>
+fun! MyUniteOpenFileRec()
+    Unite -no-split -start-insert -auto-preview file_rec
+endfun
+
+fun! MyUniteNewFile()
+    Unite file file/new -no-split -buffer-name=notes -start-insert -auto-preview
+endfun
+
+fun! MyUniteOutline()
+    Unite -no-split -start-insert outline
+endfun
+
+fun! MyUniteGrep()
+    Unite -no-split grep:.
+endfun
+
+nnoremap <Leader>uf :<C-u>call MyUniteOpenFileRec()<CR>
+nnoremap <Leader>un :<C-u>call MyUniteNewFile()<CR>
+nnoremap <Leader>uo :<C-u>call MyUniteOutline()<CR>
+nnoremap <Leader>ug :<C-u>call MyUniteGrep()<CR>
