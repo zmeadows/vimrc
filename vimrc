@@ -1,5 +1,7 @@
 set nocompatible
 
+let hostname = substitute(system('hostname'), '\n', '', '')
+
 " install vim-plug if not present
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -16,6 +18,7 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 
 Plug 'flazz/vim-colorschemes'
+Plug 'atelierbram/vim-colors_atelier-schemes'
 
 Plug 'sirtaj/vim-openscad', { 'for' : 'scad' }
 Plug 'sophacles/vim-processing', { 'for' : 'pde' }
@@ -46,7 +49,7 @@ Plug 'atelierbram/vim-colors_atelier-schemes'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-let g:airline_theme='solarized'
+" let g:airline_theme='solarized'
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -148,7 +151,7 @@ set viminfo='100,f1
 " APPEARANCE
 set t_Co=256
 set background=dark
-color solarized
+color base16-ateliersulphurpool
 set antialias
 set guioptions=me
 
@@ -189,13 +192,15 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let rootflags = system('root-config --cflags')[:-2]
-
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . rootflags
-
-let g:syntastic_c_compiler = 'clang'
-let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
+if hostname == "titan"
+    let g:syntastic_cpp_checkers = []
+elseif hostname == "macbook"
+    let rootflags = system('root-config --cflags')[:-2]
+    let g:syntastic_cpp_compiler = 'clang++'
+    let g:syntastic_c_compiler = 'clang'
+    let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . rootflags
+    let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
+endif
 
 let g:syntastic_python_checkers = ['pyflakes']
 
@@ -259,23 +264,18 @@ call SetupCommandAlias('WA', 'wa')
 call SetupCommandAlias('Wqa', 'wqa')
 call SetupCommandAlias('WQa', 'wqa')
 call SetupCommandAlias('WQA', 'wqa')
+call SetupCommandAlias('Vsplit', 'vsplit')
+call SetupCommandAlias('VSplit', 'vsplit')
+call SetupCommandAlias('Split', 'split')
+call SetupCommandAlias('SPlit', 'split')
 
-
-" NOTES
-
-fun! StartPandocPreview()
-    let pandoc_compile_command = '/usr/local/bin/pandoc ' .
-        \ expand('%:p') .
-        \ ' -o /private/tmp/note_tmp.pdf -V geometry:margin=1in'
-
-    call vimproc#system_bg('open -a Skim /private/tmp/note_tmp.pdf')
-    call vimproc#system_bg(pandoc_compile_command)
-
-    autocmd BufWritePost *.md :call vimproc#system_bg(pandoc_compile_command)
-    autocmd InsertLeave *.md update | :call vimproc#system_bg(pandoc_compile_command)
+fun! StartMarkdownPreview()
+    call vimproc#system_bg('open -a Marked\ 2 ' . expand('%:p'))
+    autocmd InsertLeave *.md update
 endfun
 
-autocmd Filetype markdown nnoremap <Leader>pp :call StartPandocPreview()<CR>
+autocmd Filetype markdown nnoremap <Leader>pp :call StartMarkdownPreview()<CR>
+
 
 " UNITE
 
