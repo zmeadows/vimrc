@@ -2,6 +2,10 @@ set nocompatible
 
 let hostname = substitute(system('hostname'), '\n', '', '')
 
+if (hostname != "macbook" && hostname != "titan")
+    echoerr "Unrecognized hostname encountered: " . hostname
+endif
+
 " install vim-plug if not present
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -17,8 +21,7 @@ Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 
-Plug 'flazz/vim-colorschemes'
-Plug 'atelierbram/vim-colors_atelier-schemes'
+Plug 'altercation/vim-colors-solarized'
 
 Plug 'sirtaj/vim-openscad', { 'for' : 'scad' }
 Plug 'sophacles/vim-processing', { 'for' : 'pde' }
@@ -44,12 +47,12 @@ let g:LatexBox_show_warnings = 0
 Plug 'godlygeek/tabular'
 vnoremap <Enter> :Tab<Space>/
 
-Plug 'atelierbram/vim-colors_atelier-schemes'
+Plug 'parnmatt/vim-root'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" let g:airline_theme='solarized'
+let g:airline_theme='solarized'
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -117,7 +120,6 @@ set autoread
 set gcr=a:blinkon0
 set mouse=a
 autocmd VimEnter * set cmdheight=1
-" set title titlestring="VIM Objectively the best text editor."
 let &titlestring = "vim"
 set noerrorbells
 set lazyredraw
@@ -130,7 +132,7 @@ if executable("ag")
 endif
 
 " ROOT
-au BufNewFile,BufRead *.C set filetype=cpp
+au BufNewFile,BufRead *.C set filetype=cpp.root
 
 " INDENT/TAB/SPACES
 set autoindent
@@ -151,7 +153,8 @@ set viminfo='100,f1
 " APPEARANCE
 set t_Co=256
 set background=dark
-color base16-ateliersulphurpool
+color solarized
+hi Normal ctermbg=none
 set antialias
 set guioptions=me
 
@@ -192,13 +195,21 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+let root_flags = system('root-config --cflags')[:-2]
 if hostname == "titan"
-    let g:syntastic_cpp_checkers = []
+    let rc_lflags = system('rc get_ldflags')[:-2]
+    let rc_cxx_flags = system('rc get_cxxflags')[:-2]
+    let g:syntastic_cpp_compiler = 'g++'
+    let g:syntastic_cpp_compiler_options = "-std=c++11 " . root_flags . ' ' . rc_lflags . ' ' . rc_cxx_flags
+    "let g:syntastic_cpp_compiler_options = "-std=c++11 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags . ' ' . rc_flags
+
+    let g:syntastic_c_compiler = 'gcc'
+    "let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
 elseif hostname == "macbook"
-    let rootflags = system('root-config --cflags')[:-2]
     let g:syntastic_cpp_compiler = 'clang++'
-    let g:syntastic_c_compiler = 'clang'
     let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . rootflags
+
+    let g:syntastic_c_compiler = 'clang'
     let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
 endif
 
@@ -282,8 +293,8 @@ autocmd Filetype markdown nnoremap <Leader>pp :call StartMarkdownPreview()<CR>
 let g:unite_source_grep_max_candidates = 5000
 let g:unite_source_grep_search_word_highlight = 'IncSearch'
 
-if executable('ag')
-    let g:unite_source_grep_command = 'ag'
+if executable('ack')
+    let g:unite_source_grep_command = 'ack'
     let g:unite_source_grep_default_opts = '--vimgrep' .
                 \' --ignore "RootCoreBin"'
     let g:unite_source_grep_recursive_opt = ''
