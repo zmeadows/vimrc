@@ -21,6 +21,8 @@ Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 
+Plug 'rhysd/clever-f.vim'
+
 Plug 'altercation/vim-colors-solarized'
 
 Plug 'sirtaj/vim-openscad', { 'for' : 'scad' }
@@ -30,6 +32,8 @@ Plug 'vim-pandoc/vim-pandoc', { 'for' : ['markdown', 'pdc'] }
 Plug 'vim-pandoc/vim-pandoc-syntax', { 'for' : ['markdown', 'pdc'] }
 let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
 let g:pandoc#filetypes#pandoc_markdown = 0
+
+Plug 'coderifous/textobj-word-column.vim'
 
 Plug 'neovimhaskell/haskell-vim', { 'for' : 'haskell' }
 let g:haskell_enable_quantification = 1
@@ -78,9 +82,10 @@ function! AirlineInit()
     let g:airline_section_y = airline#section#create([])
     let g:airline_section_z = airline#section#create(['%l',':','%c'])
     let g:airline_section_warning = airline#section#create(['syntastic'])
+    AirlineRefresh
 endfunction
 
-autocmd VimEnter * call AirlineInit()
+autocmd VimEnter,BufEnter * call AirlineInit()
 
 Plug 'justinmk/vim-syntax-extra'
 
@@ -93,8 +98,6 @@ Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
-
-Plug 'airblade/vim-gitgutter'
 
 Plug 'xolox/vim-misc'
 
@@ -207,7 +210,7 @@ if hostname == "titan"
     "let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
 elseif hostname == "macbook"
     let g:syntastic_cpp_compiler = 'clang++'
-    let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . rootflags
+    let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags
 
     let g:syntastic_c_compiler = 'clang'
     let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
