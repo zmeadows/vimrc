@@ -23,7 +23,13 @@ Plug 'Shougo/unite-outline'
 
 Plug 'rhysd/clever-f.vim'
 
+Plug 'rust-lang/rust.vim'
+
 Plug 'altercation/vim-colors-solarized'
+Plug 'scwood/vim-hybrid'
+Plug 'rakr/vim-two-firewatch'
+Plug 'rakr/vim-one'
+Plug 'YorickPeterse/happy_hacking.vim'
 
 Plug 'sirtaj/vim-openscad', { 'for' : 'scad' }
 Plug 'sophacles/vim-processing', { 'for' : 'pde' }
@@ -56,7 +62,7 @@ Plug 'parnmatt/vim-root'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-let g:airline_theme='solarized'
+let g:airline_theme='hybridline'
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -75,12 +81,12 @@ let g:airline_mode_map = {
       \ }
 
 function! AirlineInit()
-    let g:airline_section_a = airline#section#create(['mode'])
-    let g:airline_section_b = airline#section#create(['%t'])
-    let g:airline_section_c = airline#section#create([])
-    let g:airline_section_x = airline#section#create([])
-    let g:airline_section_y = airline#section#create([])
-    let g:airline_section_z = airline#section#create(['%l',':','%c'])
+    let g:airline_section_a       = airline#section#create(['mode'])
+    let g:airline_section_b       = airline#section#create(['%t'])
+    let g:airline_section_c       = airline#section#create([])
+    let g:airline_section_x       = airline#section#create([])
+    let g:airline_section_y       = airline#section#create([])
+    let g:airline_section_z       = airline#section#create(['%l',':','%c'])
     let g:airline_section_warning = airline#section#create(['syntastic'])
     AirlineRefresh
 endfunction
@@ -93,11 +99,12 @@ Plug 'ntpeters/vim-better-whitespace'
 autocmd BufWritePre * StripWhitespace
 
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+
 Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
 
 Plug 'xolox/vim-misc'
 
@@ -154,10 +161,26 @@ set hls is ic scs
 set viminfo='100,f1
 
 " APPEARANCE
-set t_Co=256
+
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (empty($TMUX))
+  if (has("nvim"))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
+
 set background=dark
-color solarized
-hi Normal ctermbg=none
+color hybrid
+" hi Normal ctermbg=none
 set antialias
 set guioptions=me
 
@@ -293,7 +316,7 @@ autocmd Filetype markdown nnoremap <Leader>pp :call StartMarkdownPreview()<CR>
 
 " UNITE
 
-let g:unite_source_grep_max_candidates = 5000
+let g:unite_source_grep_max_candidates = 500
 let g:unite_source_grep_search_word_highlight = 'IncSearch'
 
 if executable('ack')
@@ -326,11 +349,11 @@ function! s:unite_my_settings()
 endfunction
 
 fun! MyUniteOpenFileRec()
-    Unite -no-split -start-insert -auto-preview file_rec
+    Unite -no-split -start-insert file_rec
 endfun
 
 fun! MyUniteNewFile()
-    Unite file file/new -no-split -buffer-name=notes -start-insert -auto-preview
+    Unite file file/new -no-split -buffer-name=notes -start-insert
 endfun
 
 fun! MyUniteOutline()
