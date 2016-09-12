@@ -21,16 +21,20 @@ Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 
+Plug 'rhysd/clever-f.vim'
+
+Plug 'rust-lang/rust.vim'
+
 Plug 'altercation/vim-colors-solarized'
 Plug 'scwood/vim-hybrid'
-
-if (hostname != "titan")
-    Plug 'scrooloose/syntastic'
-endif
+Plug 'atelierbram/vim-colors_atelier-schemes'
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'rakr/vim-two-firewatch'
+Plug 'rakr/vim-one'
+Plug 'YorickPeterse/happy_hacking.vim'
 
 Plug 'sirtaj/vim-openscad', { 'for' : 'scad' }
 Plug 'sophacles/vim-processing', { 'for' : 'pde' }
-Plug 'rust-lang/rust.vim'
 
 Plug 'vim-pandoc/vim-pandoc', { 'for' : ['markdown', 'pdc'] }
 Plug 'vim-pandoc/vim-pandoc-syntax', { 'for' : ['markdown', 'pdc'] }
@@ -60,14 +64,11 @@ Plug 'parnmatt/vim-root'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-let g:airline_theme='hybridline'
+"" let g:airline_theme='hybridline'
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
-
-if (hostname != "titan")
-    let g:airline#extensions#syntastic#enabled = 1
-endif
+let g:airline#extensions#syntastic#enabled = 1
 
 let g:airline_mode_map = {
       \ '__' : '-',
@@ -100,6 +101,7 @@ Plug 'ntpeters/vim-better-whitespace'
 autocmd BufWritePre * StripWhitespace
 
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+
 Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-fugitive'
@@ -111,6 +113,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-lua-ftplugin', { 'for': 'lua' }
 let g:lua_check_syntax = 0 " turn off syntastic feature duplication
 
+Plug 'scrooloose/syntastic'
 call plug#end()
 
 syntax enable
@@ -178,7 +181,8 @@ if (empty($TMUX))
 endif
 
 set background=dark
-color hybrid
+color base16-ateliersulphurpool
+" hi Normal ctermbg=none
 set antialias
 set guioptions=me
 
@@ -219,23 +223,23 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" let root_flags = system('root-config --cflags')[:-2]
-" if hostname == "titan"
-"     let rc_lflags = system('rc get_ldflags')[:-2]
-"     let rc_cxx_flags = system('rc get_cxxflags')[:-2]
-"     let g:syntastic_cpp_compiler = 'g++'
-"     let g:syntastic_cpp_compiler_options = "-std=c++11 " . root_flags . ' ' . rc_lflags . ' ' . rc_cxx_flags
-"     "let g:syntastic_cpp_compiler_options = "-std=c++11 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags . ' ' . rc_flags
-"
-"     let g:syntastic_c_compiler = 'gcc'
-"     "let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
-" elseif hostname == "macbook"
-"     let g:syntastic_cpp_compiler = 'clang++'
-"     let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags
-"
-"     let g:syntastic_c_compiler = 'clang'
-"     let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
-" endif
+let root_flags = system('root-config --cflags')[:-2]
+if hostname == "titan"
+    let rc_lflags = system('rc get_ldflags')[:-2]
+    let rc_cxx_flags = system('rc get_cxxflags')[:-2]
+    let g:syntastic_cpp_compiler = 'g++'
+    let g:syntastic_cpp_compiler_options = "-std=c++11 " . root_flags . ' ' . rc_lflags . ' ' . rc_cxx_flags
+    "let g:syntastic_cpp_compiler_options = "-std=c++11 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags . ' ' . rc_flags
+
+    let g:syntastic_c_compiler = 'gcc'
+    "let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
+elseif hostname == "macbook"
+    let g:syntastic_cpp_compiler = 'clang++'
+    let g:syntastic_cpp_compiler_options = "-std=c++14 -stdlib=libc++ -Wall -Wc++11-extensions -Wc99-extensions " . root_flags
+
+    let g:syntastic_c_compiler = 'clang'
+    let g:syntastic_c_compiler_options = "-std=gnu99 -Wall -Werror -pedantic"
+endif
 
 let g:syntastic_python_checkers = ['pyflakes']
 
