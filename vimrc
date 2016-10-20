@@ -1,19 +1,23 @@
 " install vim-plug if not present
-if empty(glob('$HOME/.vim/autoload/plug.vim'))
+if ( empty(glob('$HOME/.vim/autoload/plug.vim')) && executable("vim") )
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall | source ~/.vimrc
 endif
 
+let hostname = substitute(system('hostname'), '\n', '', '')
+
 " {{{ PLUGINS
 call plug#begin('~/.vim/plugged')
 
 " {{{ ESSENTIAL
+"
 Plug 'tpope/vim-sensible'
 Plug 'ajh17/VimCompletesMe'
 Plug 'tpope/vim-commentary'
 Plug 'coderifous/textobj-word-column.vim'
 Plug 'romainl/vim-qf'
+Plug 'tpope/vim-fugitive'
 
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_executable_haskell = 'gutenhasktags'
@@ -32,7 +36,23 @@ autocmd BufWritePre * StripWhitespace
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-nnoremap <leader>f :Files<CR>
+
+let g:fzf_command_prefix = 'Fzf'
+" Or split the screen vertically
+let g:fzf_layout = { 'down': '10%' }
+nnoremap <leader>f :FzfFiles<CR>
+nnoremap <leader>t :FzfBTags<CR>
+nnoremap <leader>T :FzfTags<CR>
+nnoremap <leader>w :FzfWindows<CR>
+
+nnoremap <silent> <Leader>s :call fzf#run({
+\   'down': '40%',
+\   'sink': 'botright split' })<CR>
+
+nnoremap <silent> <Leader>v :call fzf#run({
+\   'right': winwidth('.') / 2,
+\   'sink':  'vertical botright split' })<CR>
+
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -46,6 +66,9 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+Plug 'mhinz/vim-grepper'
+nnoremap <leader>g :Grepper<CR>
 " }}}
 
 " {{{ LANGUAGE-SUPPORT
@@ -112,6 +135,9 @@ map <SPACE> <leader>
 highlight SpecialKey ctermfg=White ctermbg=Red
 set list
 set listchars=tab:T>
+set mouse=a
+
+set tabstop=4 shiftwidth=4 expandtab
 
 set hls is ic scs
 
